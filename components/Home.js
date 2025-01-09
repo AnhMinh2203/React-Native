@@ -1,156 +1,140 @@
-import * as React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  Image,
-  FlatList,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import categoriesData from '../assets/data/categoriesData';
-import popularData from '../assets/data/popularData';
+import React from 'react';
+import {View, Text,StyleSheet,Image,ScrollView,ImageBackground} from 'react-native';
 import colors from '../assets/colors/colors';
-import { color, round } from 'react-native-reanimated';
+import Feather from 'react-native-vector-icons/Feather';
+import Entypo from 'react-native-vector-icons/Entypo';
+import activitiesData from '../assets/data/activitiesData';
+import discoverCategoriesData from '../assets/data/discoverCategoriesData';
+import learnMoreData from '../assets/data/learnMoreData';
+import discoverData from '../assets/data/discoverData';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import profile from '../assets/images/person.png';
+import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 
 Feather.loadFont();
-MaterialCommunityIcons.loadFont();
+Entypo.loadFont();
 
-export default Home = ({ navigation }) => {
-  const renderCategoryItem = ({ item }) => {
+const Home = ({navigation}) => {
+  const renderDiscoverItem = ({item}) => {
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('Details', {
+            item: item,
+          })
+        }>
+        <ImageBackground
+          source={item.image}
+          style={[
+            styles.discoverItem,
+            {marginLeft: item.id === 'discover-1' ? 20 : 0},
+          ]}
+          imageStyle={styles.discoverItemImage}>
+          <Text style={styles.discoverItemTitle}>{item.title}</Text>
+          <View style={styles.discoverItemLocationWrapper}>
+            <Entypo name="location-pin" size={18} color={colors.white} />
+            <Text style={styles.discoverItemLocationText}>{item.location}</Text>
+          </View>
+        </ImageBackground>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderActivityItem = ({item}) => {
     return (
       <View
         style={[
-          styles.categoryItemWrapper,
+          styles.activityItemWrapper,
           {
-            backgroundColor: item.selected ? colors.primary : colors.white,
-            marginLeft: item.id == 1 ? 20 : 0,
+            marginLeft: item.id === 'activities-1' ? 20 : 0,
           },
         ]}>
-        <Image source={item.image} style={styles.categoryItemImage} />
-        <Text style={styles.categoryItemTitle}>{item.title}</Text>
-        <View
-          style={[
-            styles.categorySelectWrapper,
-            {
-              backgroundColor: item.selected ? colors.white : colors.secondary,
-            },
-          ]}>
-          <Feather
-            name="chevron-right"
-            size={8}
-            style={styles.categorySelectIcon}
-            color={item.selected ? colors.black : colors.white}
-          />
-        </View>
+        <Image source={item.image} style={styles.activityItemImage} />
+        <Text style={styles.activityItemText}>{item.title}</Text>
       </View>
+    );
+  };
+
+  const renderLearnMoreItem = ({item}) => {
+    return (
+      <ImageBackground
+        source={item.image}
+        style={[
+          styles.learnMoreItem,
+          {
+            marginLeft: item.id === 'learnMore-1' ? 20 : 20,
+          },
+        ]}
+        imageStyle={styles.learnMoreItemImage}>
+        <Text style={styles.learnMoreItemText}>{item.title}</Text>
+      </ImageBackground>
     );
   };
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        showsVerticalScrollIndicator={false}>
+      <ScrollView>
         {/* Header */}
         <SafeAreaView>
-          <View style={styles.headerWrapper}>
-            <Image
-              source={require('../assets/images/profile.png')}
-              style={styles.profileImage}
+          <View style={styles.menuWrapper}>
+            <Feather
+              name="menu"
+              size={32}
+              color={colors.black}
+              style={styles.menuIcon}
             />
-            <Feather name="menu" size={24} color={colors.textDark} />
+            <Image source={profile} style={styles.profileImage} />
           </View>
         </SafeAreaView>
 
-        {/* Titles */}
-        <View style={styles.titlesWrapper}>
-          <Text style={styles.titlesSubtitle}>Food</Text>
-          <Text style={styles.titlesTitle}>Delivery</Text>
-        </View>
-
-        {/* Search */}
-        <View style={styles.searchWrapper}>
-          <Feather name="search" size={16} color={colors.textDark} />
-          <View style={styles.search}>
-            <Text style={styles.searchText}>Search</Text>
+        {/* Discover */}
+        <View style={styles.discoverWrapper}>
+          <Text style={styles.discoverTitle}>Discover</Text>
+          <View style={styles.discoverCategoriesWrapper}>
+            <Text style={[styles.discoverCategoryText, {color: colors.orange}]}>
+              All
+            </Text>
+            <Text style={styles.discoverCategoryText}>Destinations</Text>
+            <Text style={styles.discoverCategoryText}>Cities</Text>
+            <Text style={styles.discoverCategoryText}>Experiences</Text>
           </View>
-        </View>
-
-        {/* Categories */}
-        <View style={styles.categoriesWrapper}>
-          <Text style={styles.categoriesTitle}>Categories</Text>
-          <View style={styles.categoriesListWrapper}>
+          <View style={styles.discoverItemsWrapper}>
             <FlatList
-              data={categoriesData}
-              renderItem={renderCategoryItem}
+              data={discoverData}
+              renderItem={renderDiscoverItem}
               keyExtractor={(item) => item.id}
-              horizontal={true}
+              horizontal
+              showsHorizontalScrollIndicator={false}
             />
           </View>
         </View>
 
-        {/* Popular */}
-        <View style={styles.popularWrapper}>
-          <Text style={styles.popularTitle}>Popular</Text>
-          {popularData.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              onPress={() =>
-                navigation.navigate('Details', {
-                  item: item,
-                })
-              }>
-              <View
-                style={[
-                  styles.popularCardWrapper,
-                  {
-                    marginTop: item.id == 1 ? 10 : 20,
-                  },
-                ]}>
-                <View>
-                  <View>
-                    <View style={styles.popularTopWrapper}>
-                      <MaterialCommunityIcons
-                        name="crown"
-                        size={12}
-                        color={colors.primary}
-                      />
-                      <Text style={styles.popularTopText}>top of the week</Text>
-                    </View>
-                    <View style={styles.popularTitlesWrapper}>
-                      <Text style={styles.popularTitlesTitle}>
-                        {item.title}
-                      </Text>
-                      <Text style={styles.popularTitlesWeight}>
-                        Weight {item.weight}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={styles.popularCardBottom}>
-                    <View style={styles.addPizzaButton}>
-                      <Feather name="plus" size={10} color={colors.textDark} />
-                    </View>
-                    <View style={styles.ratingWrapper}>
-                      <MaterialCommunityIcons
-                        name="star"
-                        size={10}
-                        color={colors.textDark}
-                      />
-                      <Text style={styles.rating}>{item.rating}</Text>
-                    </View>
-                  </View>
-                </View>
+        {/* Activities */}
+        <View style={styles.activitiesWrapper}>
+          <Text style={styles.activitiesTitle}>Activities</Text>
+          <View style={styles.activitiesItemsWrapper}>
+            <FlatList
+              data={activitiesData}
+              renderItem={renderActivityItem}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+          </View>
+        </View>
 
-                <View style={styles.popularCardRight}>
-                  <Image source={item.image} style={styles.popularCardImage} />
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))}
+        {/* Learn More */}
+        <View style={styles.learnMoreWrapper}>
+          <Text style={styles.learnMoreTitle}>Learn More</Text>
+          <View style={styles.learnMoreItemsWrapper}>
+            <FlatList
+              data={learnMoreData}
+              renderItem={renderLearnMoreItem}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -160,178 +144,124 @@ export default Home = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    color: colors.white,
   },
-  headerWrapper: {
+  menuWrapper: {
+    marginHorizontal: 20,
+    marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 20,
     alignItems: 'center',
   },
   profileImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 40,
+    width: 52,
+    height: 52,
+    borderRadius: 10,
   },
-  titlesWrapper: {
-    marginTop: 30,
-    paddingHorizontal: 20,
+  discoverWrapper: {
+    // marginHorizontal: 20,
+    marginTop: 20,
   },
-  titlesSubtitle: {
-    fontFamily: 'Montserrat-Regular',
-    fontSize: 16,
-    color: colors.textDark,
-  },
-  titlesTitle: {
-    fontFamily: 'Montserrat-Bold',
-    fontSize: 32,
-    color: colors.textDark,
-    marginTop: 5,
-  },
-  searchWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    marginTop: 30,
-  },
-  search: {
-    flex: 1,
-    marginLeft: 10,
-    borderBottomColor: colors.textLight,
-    borderBottomWidth: 2,
-  },
-  searchText: {
-    fontFamily: 'Montserrat-Semibold',
-    fontSize: 14,
-    marginBottom: 5,
-    color: colors.textLight,
-  },
-  categoriesWrapper: {
-    marginTop: 30,
-  },
-  categoriesTitle: {
-    fontFamily: 'Montserrat-Bold',
-    fontSize: 16,
-    paddingHorizontal: 20,
-  },
-  categoriesListWrapper: {
-    paddingTop: 15,
-    paddingBottom: 20,
-  },
-  categoryItemWrapper: {
-    backgroundColor: '#F5CA48',
-    marginRight: 20,
-    borderRadius: 20,
-    shadowColor: colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
-  },
-  categoryItemImage: {
-    width: 60,
-    height: 60,
-    marginTop: 25,
-    alignSelf: 'center',
+  discoverTitle: {
     marginHorizontal: 20,
+    fontFamily: 'Lato-Bold',
+    fontSize: 32,
   },
-  categoryItemTitle: {
-    textAlign: 'center',
-    fontFamily: 'Montserrat-Medium',
-    fontSize: 14,
-    marginTop: 10,
-  },
-  categorySelectWrapper: {
-    alignSelf: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
-    width: 26,
-    height: 26,
-    borderRadius: 26,
-    marginBottom: 20,
-  },
-  categorySelectIcon: {
-    alignSelf: 'center',
-  },
-  popularWrapper: {
-    paddingHorizontal: 20,
-  },
-  popularTitle: {
-    fontFamily: 'Montserrat-Bold',
-    fontSize: 16,
-  },
-  popularCardWrapper: {
-    backgroundColor: colors.white,
-    borderRadius: 25,
-    paddingTop: 20,
-    paddingLeft: 20,
+  discoverCategoriesWrapper: {
+    marginHorizontal: 20,
     flexDirection: 'row',
-    overflow: 'hidden',
-    shadowColor: colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
+    marginTop: 20,
   },
-  popularTopWrapper: {
+  discoverCategoryText: {
+    marginRight: 30,
+    fontFamily: 'Lato-Regular',
+    fontSize: 16,
+    color: colors.gray,
+  },
+  discoverItemsWrapper: {
+    paddingVertical: 20,
+  },
+  discoverItem: {
+    width: 170,
+    height: 250,
+    justifyContent: 'flex-end',
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+    marginRight: 20,
+  },
+  discoverItemImage: {
+    borderRadius: 20,
+  },
+  discoverItemTitle: {
+    fontFamily: 'Lato-Bold',
+    fontSize: 18,
+    color: colors.white,
+  },
+  discoverItemLocationWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  popularTopText: {
-    marginLeft: 10,
-    fontFamily: 'Montserrat-SemiBold',
-    fontSize: 14,
-  },
-  popularTitlesWrapper: {
-    marginTop: 20,
-  },
-  popularTitlesTitle: {
-    fontFamily: 'Montserrat-SemiBold',
-    fontSize: 14,
-    color: colors.textDark,
-  },
-  popularTitlesWeight: {
-    fontFamily: 'Montserrat-Medium',
-    fontSize: 12,
-    color: colors.textLight,
     marginTop: 5,
   },
-  popularCardBottom: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
-    marginLeft: -20,
-  },
-  addPizzaButton: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: 40,
-    paddingVertical: 20,
-    borderTopRightRadius: 25,
-    borderBottomLeftRadius: 25,
-  },
-  ratingWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 20,
-  },
-  rating: {
-    fontFamily: 'Montserrat-SemiBold',
-    fontSize: 12,
-    color: colors.textDark,
+  discoverItemLocationText: {
     marginLeft: 5,
+    fontFamily: 'Lato-Bold',
+    fontSize: 14,
+    color: colors.white,
   },
-  popularCardRight: {
-    marginLeft: 40,
+  activitiesWrapper: {
+    marginTop: 10,
   },
-  popularCardImage: {
-    width: 210,
-    height: 125,
-    resizeMode: 'contain',
+  activitiesTitle: {
+    marginHorizontal: 20,
+    fontFamily: 'Lato-Bold',
+    fontSize: 24,
+    color: colors.black,
+  },
+  activitiesItemsWrapper: {
+    paddingVertical: 20,
+  },
+  activityItemWrapper: {
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginRight: 20,
+  },
+  activityItemImage: {
+    width: 36,
+  },
+  activityItemText: {
+    marginTop: 5,
+    fontFamily: 'Lato-Bold',
+    fontSize: 14,
+    color: colors.gray,
+  },
+  learnMoreWrapper: {
+    marginTop: 10,
+  },
+  learnMoreTitle: {
+    marginHorizontal: 20,
+    fontFamily: 'Lato-Bold',
+    fontSize: 24,
+    color: colors.black,
+  },
+  learnMoreItemsWrapper: {
+    paddingVertical: 20,
+  },
+  learnMoreItem: {
+    width: 170,
+    height: 180,
+    justifyContent: 'flex-end',
+    marginRight: 20,
+  },
+  learnMoreItemImage: {
+    borderRadius: 20,
+  },
+  learnMoreItemText: {
+    fontFamily: 'Lato-Bold',
+    fontSize: 18,
+    color: colors.white,
+    marginHorizontal: 10,
+    marginVertical: 20,
   },
 });
+
+export default Home;
