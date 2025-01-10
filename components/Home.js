@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text,StyleSheet,Image,ScrollView,ImageBackground} from 'react-native';
+import {View,Text,StyleSheet,Image,ScrollView,ImageBackground} from 'react-native';
 import colors from '../assets/colors/colors';
 import Feather from 'react-native-vector-icons/Feather';
 import Entypo from 'react-native-vector-icons/Entypo';

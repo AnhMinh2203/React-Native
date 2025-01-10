@@ -10,15 +10,22 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^2.1.0",
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/stack": "^6.3.29",
+    "@reduxjs/toolkit": "^2.5.0",
+    "axios": "^1.7.9",
+    "lottie-ios": "3.1.8",
+    "lottie-react-native": "latest",
     "react": "18.3.1",
     "react-native": "0.76.5",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-safe-area-context": "^4.5.0",
     "react-native-screens": "^3.20.0",
-    "react-native-vector-icons": "^10.0.3"
+    "react-native-vector-icons": "^10.0.3",
+    "react-redux": "^9.2.0",
+    "redux": "^5.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
